@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { useState } from 'react';
@@ -6,31 +7,39 @@ import { Loader2 } from 'lucide-react';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import * as fal from '@fal-ai/serverless-client';
 
-// Configure fal client (you should use environment variables for the API key)
-fal.config({
-  credentials: process.env.NEXT_PUBLIC_FAL_KEY,
-});
+// Remove fal import and configuration
 
-type FormData = {
+interface FormData {
   prompt: string;
-};
+}
 
 export function ImageGenerationForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
-  const form = useForm<FormData>();
+  const form = useForm<FormData>({
+    defaultValues: {
+      prompt: '',
+    },
+  });
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     try {
-      const result = await fal.subscribe('fal-ai/fast-sdxl', {
-        input: {
-          prompt: data.prompt,
+      const response = await fetch('/api/generate-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ prompt: data.prompt }),
       });
-      setGeneratedImage(result.images[0].url);
+
+      if (!response.ok) {
+        throw new Error('Failed to generate image');
+      }
+
+      const result = await response.json();
+      setGeneratedImage(result.imageUrl);
     } catch (error) {
       console.error('Error generating image:', error);
     } finally {
