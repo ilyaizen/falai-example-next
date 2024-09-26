@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { Image } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { ImageGenerationForm } from '@/components/ImageGenerationForm';
 
 export default function Home() {
   return (
@@ -15,8 +16,9 @@ export default function Home() {
         <ThemeToggle />
       </header>
 
-      <main className="flex flex-grow items-center justify-center">
-        <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">Welcome to Fal.ai Example</h2>
+      <main className="flex flex-grow flex-col items-center justify-center p-8">
+        <h2 className="mb-8 text-2xl font-bold text-zinc-900 dark:text-white">Image Generation with Fal.ai</h2>
+        <ImageGenerationForm />
       </main>
 
       <footer className="mb-2 rounded-2xl bg-zinc-100 p-4 text-center text-sm text-zinc-600 shadow-md dark:bg-zinc-800 dark:text-zinc-400">
